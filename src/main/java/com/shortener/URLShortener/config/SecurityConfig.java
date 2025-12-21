@@ -31,18 +31,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(AbstractHttpConfigurer::disable);
+        http
+                .cors(Customizer.withDefaults()) // ✅ ENABLE CORS
+                .csrf(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
         http.authorizeHttpRequests(auth -> auth
-
                 .requestMatchers(
                         "/shortify/register",
                         "/shortify/login",
-                        "/api/url/*"
+                        "/api/url/**",
+                        "/error"
                 ).permitAll()
                 .anyRequest().authenticated()
         );
